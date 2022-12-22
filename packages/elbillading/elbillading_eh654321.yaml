@@ -1,0 +1,378 @@
+input_number:
+  eh654321_maximum_charging_current:
+    name: EH654321 max charging current
+    min: 6
+    max: 32
+    step: 1
+    mode: box
+    unit_of_measurement: "A"
+    icon: mdi:lightning-bolt
+
+input_boolean:
+  eh654321_charging_complete:
+    name: EH654321 charging complete
+    icon: mdi:battery
+
+input_select:
+  eh654321_car:
+    name: Bil tilknyttet EH654321
+    options:
+      - iX xDrive40
+      - 225xe iPerformance
+      - annen
+
+template:
+  - sensor:
+      - name: EH654321 car
+        unique_id: eh654321_car
+        state: >
+          {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+            ix_xdrive40 
+          {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+            225xe_iperformance 
+          {% else %}
+            other
+          {% endif %}
+        attributes:
+          smart_charging: >
+            {{ states('switch.eh654321_smart_charging')}}
+          remaining_battery_charge: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('sensor.ix_xdrive40_remaining_battery_percent') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('sensor.225xe_iperformance_remaining_battery_percent') }}
+            {% else %}
+              0
+            {% endif %}
+          charging_goal: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_number.ix_xdrive40_charging_goal') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_number.225xe_iperformance_charging_goal') }}
+            {% else %}
+              100
+            {% endif %}
+          minimum_charge: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_number.ix_xdrive40_minimum_charge') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_number.225xe_iperformance_minimum_charge') }}
+            {% else %}
+              100
+            {% endif %}
+          battery_capacity: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_number.ix_xdrive40_battery_capacity') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_number.225xe_iperformance_battery_capacity') }}
+            {% else %}
+              150
+            {% endif %}
+          maximum_charging_power: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_number.ix_xdrive40_maximum_charging_power') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_number.225xe_iperformance_maximum_charging_power') }}
+            {% else %}
+              22
+            {% endif %}
+          charging_losses: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_number.ix_xdrive40_charging_losses') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_number.225xe_iperformance_charging_losses') }}
+            {% else %}
+              20
+            {% endif %}
+          departure_monday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_boolean.ix_xdrive40_departure_monday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_boolean.225xe_iperformance_departure_monday') }}
+            {% else %}
+              true
+            {% endif %}
+          departure_tuesday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_boolean.ix_xdrive40_departure_tuesday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_boolean.225xe_iperformance_departure_tuesday') }}
+            {% else %}
+              true
+            {% endif %}
+          departure_wednesday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_boolean.ix_xdrive40_departure_wednesday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_boolean.225xe_iperformance_departure_wednesday') }}
+            {% else %}
+              true
+            {% endif %}
+          departure_thursday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_boolean.ix_xdrive40_departure_thursday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_boolean.225xe_iperformance_departure_thursday') }}
+            {% else %}
+              true
+            {% endif %}
+          departure_friday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_boolean.ix_xdrive40_departure_friday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_boolean.225xe_iperformance_departure_friday') }}
+            {% else %}
+              true
+            {% endif %}
+          departure_saturday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_boolean.ix_xdrive40_departure_saturday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_boolean.225xe_iperformance_departure_saturday') }}
+            {% else %}
+              true
+            {% endif %}
+          departure_sunday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_boolean.ix_xdrive40_departure_sunday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_boolean.225xe_iperformance_departure_sunday') }}
+            {% else %}
+              true
+            {% endif %}
+          departure_time_monday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_datetime.ix_xdrive40_departure_time_monday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_datetime.225xe_iperformance_departure_time_monday') }}
+            {% else %}
+              06:00:00
+            {% endif %}
+          departure_time_tuesday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_datetime.ix_xdrive40_departure_time_tuesday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_datetime.225xe_iperformance_departure_time_tuesday') }}
+            {% else %}
+              06:00:00
+            {% endif %}
+          departure_time_wednesday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_datetime.ix_xdrive40_departure_time_wednesday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_datetime.225xe_iperformance_departure_time_wednesday') }}
+            {% else %}
+              06:00:00
+            {% endif %}
+          departure_time_thursday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_datetime.ix_xdrive40_departure_time_thursday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_datetime.225xe_iperformance_departure_time_thursday') }}
+            {% else %}
+              06:00:00
+            {% endif %}
+          departure_time_friday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_datetime.ix_xdrive40_departure_time_friday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_datetime.225xe_iperformance_departure_time_friday') }}
+            {% else %}
+              06:00:00
+            {% endif %}
+          departure_time_saturday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_datetime.ix_xdrive40_departure_time_saturday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_datetime.225xe_iperformance_departure_time_saturday') }}
+            {% else %}
+              06:00:00
+            {% endif %}
+          departure_time_sunday: >
+            {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+              {{ states('input_datetime.ix_xdrive40_departure_time_sunday') }}
+            {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+              {{ states('input_datetime.225xe_iperformance_departure_time_sunday') }}
+            {% else %}
+              06:00:00
+            {% endif %}
+
+      - name: EH654321 charging power
+        unique_id: eh654321_charging_power
+        unit_of_measurement: "kW"
+        device_class: power
+        state: >
+          {{ ((states('sensor.eh654321_current') | float(0.0)) * (states('sensor.eh654321_voltage') | float(0.0))) / 1000.0 }}
+      - name: EH654321 charging price
+        unique_id: eh654321_charging_price
+        unit_of_measurement: "NOK/h"
+        device_class: monetary
+        state: >
+          {{ (states('sensor.eh654321_charging_power') | float(0.0)) * (states('sensor.strompris_hjemme') | float(0.0)) }}
+      - name: EH654321 charging rate this month
+        unique_id: eh654321_charging_rate_this_month
+        unit_of_measurement: "NOK/kWh"
+        device_class: monetary
+        state: >
+          {% if (states('sensor.eh654321_monthly_charging_energy') | float(0.0)) == 0 %}
+            {{ 0.0 | float(0.0)}}
+          {% else %}
+            {{ ((states('sensor.eh654321_monthly_charging_cost') | float(0.0))/(states('sensor.eh654321_monthly_charging_energy') | float(0.0))) | round(4) }}
+          {% endif %}
+        attributes:
+          last_period: >
+            {% if (state_attr('sensor.eh654321_monthly_charging_energy', 'last_period') | float(0.0)) == 0 %}
+              {{ 0.0 | float(0.0)}}
+            {% else %}
+              {{ ((state_attr('sensor.eh654321_monthly_charging_cost', 'last_period') | float(0.0))/(state_attr('sensor.eh654321_monthly_charging_energy', 'last_period') | float(0.0))) | round(4) }}
+            {% endif %}
+
+sensor:
+  - platform: integration
+    source: sensor.eh654321_charging_price
+    name: EH654321 charging cost
+    unit_time: h
+    method: left
+  - platform: integration
+    source: sensor.eh654321_charging_power
+    name: EH654321 charging energy
+    unit_time: h
+    method: left
+
+utility_meter:
+  eh654321_monthly_charging_cost:
+    name: EH654321 monthly charging cost
+    source: sensor.eh654321_charging_cost
+    cycle: monthly
+  eh654321_monthly_charging_energy:
+    name: EH654321 monthly charging energy
+    source: sensor.eh654321_lifetime_energy
+    cycle: monthly
+
+automation:
+  - id: start_appdaemon_elbillading_eh654321_ved_tilkobling
+    alias: Start AppDaemon elbillading EH654321 ved tilkobling
+    trigger:
+      - platform: state
+        entity_id: sensor.eh654321_status
+        from: "disconnected"
+      - platform: state
+        entity_id: sensor.strompris_hjemme
+      - platform: state
+        entity_id: sensor.eh654321_car
+      - platform: state
+        entity_id: switch.eh654321_smart_charging
+      - platform: time_pattern
+        minutes: 10
+      - platform: time_pattern
+        minutes: 20
+      - platform: time_pattern
+        minutes: 30
+      - platform: time_pattern
+        minutes: 40
+      - platform: time_pattern
+        minutes: 50
+    action:
+      event: eh654321_connection
+      event_data:
+        name: eh654321_connection
+
+  - id: eh654321_control
+    alias: EH654321 control
+    trace:
+      stored_traces: 150
+    trigger:
+      - platform: time_pattern
+        minutes: 1
+      - platform: state
+        entity_id: binary_sensor.eh654321_charging_control
+    action:
+      - choose:
+          - conditions:
+              - condition: state
+                entity_id: binary_sensor.eh654321_charging_control
+                state: "off"
+            sequence:
+              - service: easee.set_charger_dynamic_limit
+                data:
+                  charger_id: EH654321
+                  current: >
+                    {{ min([state_attr('sensor.eh654321_status','circuit_ratedCurrent') | float(0.0), 
+                            states('input_number.eh654321_maximum_charging_current') | float(0.0)]) }}
+          - conditions:
+              - condition: template
+                value_template: >
+                  {{ (now().hour in state_attr('binary_sensor.eh654321_charging_control','charging_hours')) or 
+                     (is_state('input_boolean.eh654321_charging_complete', 'on')) }}
+            sequence:
+              - service: easee.set_charger_dynamic_limit
+                data:
+                  charger_id: EH654321
+                  current: >
+                    {{ min([state_attr('sensor.eh654321_status','circuit_ratedCurrent') | float(0.0), 
+                            states('input_number.eh654321_maximum_charging_current') | float(0.0)]) }}
+          - conditions:
+              - condition: template
+                value_template: >
+                  {% set battery_capacity = (state_attr('sensor.eh654321_car','battery_capacity') | float(0.0)) %}
+                  {% set unplanned_charging_allowed = 1.0 %}
+                  {% set idle_current_enabled = is_state('switch.eh654321_enable_idle_current', 'on') %}
+                  {% set charging_goal = (state_attr('sensor.eh654321_car','charging_goal') | float(0.0)) %}
+                  {% if is_state('input_select.eh654321_car','iX xDrive40') %}
+                    {% set state_of_charge = (states('sensor.ix_xdrive40_remaining_battery_percent') | float(0.0)) %}
+                    {{ (state_of_charge > (charging_goal - unplanned_charging_allowed/battery_capacity*100.0)) and idle_current_enabled }}
+                  {% elif is_state('input_select.eh654321_car','225xe iPerformance') %}
+                    {% set state_of_charge = (states('sensor.225xe_iperformance_remaining_battery_percent') | float(0.0)) %}
+                    {{ (state_of_charge > (charging_goal - unplanned_charging_allowed/battery_capacity*100.0)) and idle_current_enabled }}
+                  {% else %}
+                    True
+                  {% endif %}
+            sequence:
+              - service: easee.set_charger_dynamic_limit
+                data:
+                  charger_id: EH654321
+                  current: >
+                    {{ min([state_attr('sensor.eh654321_status','circuit_ratedCurrent') | float(0.0), 
+                            states('input_number.eh654321_maximum_charging_current') | float(0.0)]) }}
+        default:
+          - service: easee.set_charger_dynamic_limit
+            data:
+              charger_id: EH654321
+              current: 0
+
+  - id: eh654321_hent_bildata_ved_tilkobling
+    alias: EHFAF9LQ hent bildata ved tilkobling
+    trigger:
+      - platform: state
+        entity_id: sensor.eh654321_status
+        from: "disconnected"
+    action:
+      - service: script.hent_bildata_ved_tilkobling
+
+  - id: eh654321_reset_charging_on_disconnection
+    alias: EH654321 reset charging on disconnection
+    trigger:
+      - platform: state
+        entity_id: sensor.eh654321_status
+        to: "disconnected"
+      - platform: state
+        entity_id: sensor.eh654321_car
+        attribute: charging_goal
+    action:
+      - service: easee.smart_charging
+        data:
+          enable: true
+          charger_id: EH654321
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.eh654321_charging_complete
+
+  - id: eh654321_register_charging_complete
+    alias: EH654321 register charging complete
+    trigger:
+      - platform: state
+        entity_id: sensor.eh654321_status
+        to: "completed"
+        for: '00:02:00'
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.eh654321_charging_complete

@@ -1,0 +1,10 @@
+---
+strompris_hjemme:
+  module: strompris
+  class: strompris
+  log_progress: true
+  sensorname: 'sensor.strompris_hjemme'
+  sensoralias: 'Strømpris hjemme'
+  energyPrice: 'sensor.nordpool_kwh_oslo_nok_4_10_025'
+  energySurcharge: 'input_number.stromleverandor_paslag'
+  gridTariff: 'sensor.nettleie_hjemme_nede_forbruksledd'

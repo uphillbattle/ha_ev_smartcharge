@@ -1,0 +1,185 @@
+input_number:
+  225xe_iperformance_charging_goal:
+    name: BMW 225xe lademål
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+    unit_of_measurement: "%"
+    icon: mdi:battery-charging-80
+  225xe_iperformance_minimum_charge:
+    name: BMW 225xe minimum lading
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+    unit_of_measurement: "%"
+    icon: mdi:battery-charging-20
+  225xe_iperformance_battery_capacity:
+    name: BMW 225xe batterikapasitet
+    min: 0
+    max: 150
+    step: 1
+    mode: box
+    unit_of_measurement: "kWh"
+    icon: mdi:battery-80
+  225xe_iperformance_maximum_charging_power:
+    name: BMW 225xe max ladeeffekt
+    min: 0
+    max: 22
+    step: 0.1
+    mode: box
+    unit_of_measurement: "kW"
+    icon: mdi:ev-station
+  225xe_iperformance_charging_losses:
+    name: BMW 225xe ladetap
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+    unit_of_measurement: "%"
+    icon: mdi:ev-plug-type2
+  225xe_iperformance_climatize_time:
+    name: BMW 225xe klimatiseringstid
+    min: 0
+    max: 30
+    step: 1
+    mode: box
+    unit_of_measurement: "min"
+    icon: mdi:hvac
+
+input_boolean:
+  225xe_iperformance_departure_monday:
+    name: BMW 225xe avreise mandag
+  225xe_iperformance_departure_tuesday:
+    name: BMW 225xe avreise tirsdag
+  225xe_iperformance_departure_wednesday:
+    name: BMW 225xe avreise onsdag
+  225xe_iperformance_departure_thursday:
+    name: BMW 225xe avreise torsdag
+  225xe_iperformance_departure_friday:
+    name: BMW 225xe avreise fredag
+  225xe_iperformance_departure_saturday:
+    name: BMW 225xe avreise lørdag
+  225xe_iperformance_departure_sunday:
+    name: BMW 225xe avreise søndag
+  225xe_iperformance_climatize_monday:
+    name: BMW 225xe klimatiser mandag
+  225xe_iperformance_climatize_tuesday:
+    name: BMW 225xe klimatiser tirsdag
+  225xe_iperformance_climatize_wednesday:
+    name: BMW 225xe klimatiser onsdag
+  225xe_iperformance_climatize_thursday:
+    name: BMW 225xe klimatiser torsdag
+  225xe_iperformance_climatize_friday:
+    name: BMW 225xe klimatiser fredag
+  225xe_iperformance_climatize_saturday:
+    name: BMW 225xe klimatiser lørdag
+  225xe_iperformance_climatize_sunday:
+    name: BMW 225xe klimatiser søndag
+
+input_datetime:
+  225xe_iperformance_departure_time_monday:
+    name: BMW 225xe avreisetid mandag
+    has_date: false
+    has_time: true
+  225xe_iperformance_departure_time_tuesday:
+    name: BMW 225xe avreisetid tirsdag
+    has_date: false
+    has_time: true
+  225xe_iperformance_departure_time_wednesday:
+    name: BMW 225xe avreisetid onsdag
+    has_date: false
+    has_time: true
+  225xe_iperformance_departure_time_thursday:
+    name: BMW 225xe avreisetid torsdag
+    has_date: false
+    has_time: true
+  225xe_iperformance_departure_time_friday:
+    name: BMW 225xe avreisetid fredag
+    has_date: false
+    has_time: true
+  225xe_iperformance_departure_time_saturday:
+    name: BMW 225xe avreisetid lørdag
+    has_date: false
+    has_time: true
+  225xe_iperformance_departure_time_sunday:
+    name: BMW 225xe avreisetid søndag
+    has_date: false
+    has_time: true
+
+timer:
+  225xe_iperformance_climatize_active:
+    name: BMW 225xe klimatisering aktivert
+    duration: '00:30:00'
+
+template:
+  - binary_sensor:
+      - name: 225xe iPerformance climatize
+        unique_id: 225xe_iperformance_climatize
+        state: >
+          {% set weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] %}
+          {% set today = now().weekday() %}
+          {% set dep_time_today = states('input_datetime.225xe_iperformance_departure_time_' + weekdays[today]) %}
+          {% set dep_today = states('input_boolean.225xe_iperformance_departure_' + weekdays[today]) %}
+          {% set cli_today = states('input_boolean.225xe_iperformance_climatize_' + weekdays[today]) %}
+          {% set tomorrow = (now().weekday()+1)%7 %}
+          {% set dep_time_tomorrow = states('input_datetime.225xe_iperformance_departure_time_' + weekdays[tomorrow]) %}
+          {% set dep_tomorrow = states('input_boolean.225xe_iperformance_departure_' + weekdays[tomorrow]) %}
+          {% set cli_tomorrow = states('input_boolean.225xe_iperformance_climatize_' + weekdays[tomorrow]) %}
+          {% set cli_time_tomorrow = (((today_at(dep_time_tomorrow) | as_timestamp) - (states('input_number.225xe_iperformance_climatize_time') | int(0))*60) | timestamp_custom('%H:%M')) %}
+          {% if (dep_time_today > states('sensor.time')) %}
+            {{ dep_today and cli_today }}
+          {% elif cli_time_tomorrow > dep_time_tomorrow %}
+            {{ dep_tomorrow and cli_tomorrow }}
+          {% endif %}
+        attributes:
+          climatize_time: >
+            {% set weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] %}
+            {% set today = now().weekday() %}
+            {% set dep_time_today = states('input_datetime.225xe_iperformance_departure_time_' + weekdays[today]) %}
+            {% set dep_today = states('input_boolean.225xe_iperformance_departure_' + weekdays[today]) %}
+            {% set cli_today = states('input_boolean.225xe_iperformance_climatize_' + weekdays[today]) %}
+            {% set cli_time_today = (((today_at(dep_time_today) | as_timestamp) - (states('input_number.225xe_iperformance_climatize_time') | int(0))*60) | timestamp_custom('%H:%M')) %}
+            {% set tomorrow = (now().weekday()+1)%7 %}
+            {% set dep_time_tomorrow = states('input_datetime.225xe_iperformance_departure_time_' + weekdays[tomorrow]) %}
+            {% set dep_tomorrow = states('input_boolean.225xe_iperformance_departure_' + weekdays[tomorrow]) %}
+            {% set cli_tomorrow = states('input_boolean.225xe_iperformance_climatize_' + weekdays[tomorrow]) %}
+            {% set cli_time_tomorrow = (((today_at(dep_time_tomorrow) | as_timestamp) - (states('input_number.225xe_iperformance_climatize_time') | int(0))*60) | timestamp_custom('%H:%M')) %}
+            {% if (dep_time_today > states('sensor.time')) %}
+              {{ cli_time_today }}
+            {% else %}
+              {{ cli_time_tomorrow }}
+            {% endif %}
+          departure_time: >
+            {% set weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] %}
+            {% set today = now().weekday() %}
+            {% set dep_time_today = states('input_datetime.225xe_iperformance_departure_time_' + weekdays[today]) %}
+            {% set dep_today = states('input_boolean.225xe_iperformance_departure_' + weekdays[today]) %}
+            {% set tomorrow = (now().weekday()+1)%7 %}
+            {% set dep_time_tomorrow = states('input_datetime.225xe_iperformance_departure_time_' + weekdays[tomorrow]) %}
+            {% set dep_tomorrow = states('input_boolean.225xe_iperformance_departure_' + weekdays[tomorrow]) %}
+            {% if (dep_time_today > states('sensor.time')) %}
+              {{ dep_time_today }}
+            {% else %}
+              {{ dep_time_tomorrow }}
+            {% endif %}
+
+automation:
+  - id: 225xe_iperformance_start_climatizing
+    alias: BMW 225xe start climatizing
+    trigger:
+      - platform: template
+        value_template: >
+          {{ (state_attr('binary_sensor.225xe_iperformance_climatize', 'climatize_time') <= states('sensor.time')) and 
+             (state_attr('binary_sensor.225xe_iperformance_climatize', 'departure_time') >= states('sensor.time')) and
+             is_state('binary_sensor.225xe_iperformance_climatize','on') and
+             not(is_state('timer.225xe_iperformance_climatize_active','active')) }}
+    action:
+      - service: timer.start
+        target:
+          entity_id: timer.225xe_iperformance_climatize_active
+      - service: button.press
+        data: {}
+        target:
+          entity_id: button.225xe_iperformance_activate_air_conditioning

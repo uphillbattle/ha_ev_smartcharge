@@ -1,0 +1,15 @@
+---
+eh123456_lading:
+  module: elbillading
+  class: elbillading
+  log_progress: true
+  log_debug: false 
+  charger_id: eh123456
+  energy_price: sensor.strompris_hjemme
+eh654321_lading:
+  module: elbillading
+  class: elbillading
+  log_progress: true 
+  log_debug: false
+  charger_id: eh654321
+  energy_price: sensor.strompris_hjemme
