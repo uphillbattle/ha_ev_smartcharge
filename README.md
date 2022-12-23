@@ -32,7 +32,7 @@ The `strompris` AppDaemon app adds the energy price (for me the spot price recei
 
 For the `elbillading` AppDaemon app, you will have to specify the charger ID and the `strompris` sensor.
 
-In the packages, you will have to change the sensor names for your car(s) and charger(s). If you only have one car and/or one charger, you will have to modify the `yaml` files accordingly. If you have other car or charger makes than BMW and/or Easee, you will have to adapt accordingly as sensor names and services are not likely to be the same.
+In the packages, you will have to change the sensor names for your car(s) and charger(s). If you only have one car and/or one charger, you will have to use the number of, and modify the, `yaml` files accordingly. If you have other car or charger makes than BMW and/or Easee, you will have to adapt accordingly as sensor names and services are not likely to be the same.
 
 Best of luck!
 
